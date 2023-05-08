@@ -1,0 +1,13 @@
+{
+	"n_targets": 120769,
+	"n_bootstraps": 0,
+	"n_processed": 23772462,
+	"n_pseudoaligned": 16845111,
+	"n_unique": 14451582,
+	"p_pseudoaligned": 70.9,
+	"p_unique": 60.8,
+	"kallisto_version": "0.46.1",
+	"index_version": 10,
+	"start_time": "Sun May  7 19:05:04 2023",
+	"call": "kallisto quant -i /mnt/disk3/new_genome/ACD/01_SFS/ACD_sativa_sfs_cds.fasta.index -o 02_kallisto_out/BB313-01T0002_sfs -t 16 01_fastp/out_BB313-01T0002_1.fastq.gz 01_fastp/out_BB313-01T0002_2.fastq.gz"
+}

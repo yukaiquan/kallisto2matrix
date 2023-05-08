@@ -1,0 +1,2 @@
+./BB313-01T0001_sfs/abundance.tsv,01T0001_sfs
+./BB313-01T0002_sfs/abundance.tsv,01T0002_sfs
