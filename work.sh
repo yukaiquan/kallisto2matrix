@@ -6,3 +6,4 @@ cp ../target/x86_64-unknown-linux-musl/release/kallisto2matrix ./
 cd example
 ../kallisto2matrix -i samples.txt -o test
 
+../kallisto2matrix.exe -i ./samples_salmon.txt -o salmon

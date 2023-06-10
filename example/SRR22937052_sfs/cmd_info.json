@@ -1,0 +1,13 @@
+{
+    "salmon_version": "1.10.1",
+    "index": "/public/home/acfaa2ssz7/genome/sfs/salmon/ACD_sativa_sfs_cds.fasta.index",
+    "threads": "32",
+    "gcBias": [],
+    "geneMap": "/public/home/acfaa2ssz7/genome/sfs/ACD_sativa_sfs.gff3",
+    "libType": "A",
+    "mates1": "01_fastp/out_SRR22937052_1.fastq.gz",
+    "mates2": "01_fastp/out_SRR22937052_2.fastq.gz",
+    "output": "02_salmon_out/SRR22937052_sfs",
+    "numBootstraps": "100",
+    "auxDir": "aux_info"
+}

@@ -1,0 +1,158 @@
+[2023-06-09 10:07:06.708] [jointLog] [info] setting maxHashResizeThreads to 32
+[2023-06-09 10:07:06.708] [jointLog] [info] Fragment incompatibility prior below threshold.  Incompatible fragments will be ignored.
+[2023-06-09 10:07:06.708] [jointLog] [info] Usage of --validateMappings implies use of minScoreFraction. Since not explicitly specified, it is being set to 0.65
+[2023-06-09 10:07:06.709] [jointLog] [info] Setting consensusSlack to selective-alignment default of 0.35.
+[2023-06-09 10:07:06.709] [jointLog] [info] parsing read library format
+[2023-06-09 10:07:06.709] [jointLog] [info] There is 1 library.
+[2023-06-09 10:07:06.709] [jointLog] [info] Loading pufferfish index
+[2023-06-09 10:07:06.709] [jointLog] [info] Loading dense pufferfish index.
+[2023-06-09 10:07:07.943] [jointLog] [info] done
+[2023-06-09 10:07:08.001] [jointLog] [info] Index contained 120,352 targets
+[2023-06-09 10:07:08.933] [jointLog] [info] Number of decoys : 0
+[2023-06-09 10:07:10.051] [jointLog] [info] Automatically detected most likely library type as IU
+
+[2023-06-09 10:08:57.212] [fileLog] [info] 
+At end of round 0
+==================
+Observed 19987020 total fragments (19987020 in most recent round)
+
+[2023-06-09 10:08:57.211] [jointLog] [info] Computed 172,481 rich equivalence classes for further processing
+[2023-06-09 10:08:57.211] [jointLog] [info] Counted 12,215,383 total reads in the equivalence classes 
+[2023-06-09 10:08:57.268] [jointLog] [info] Number of mappings discarded because of alignment score : 16,608,139
+[2023-06-09 10:08:57.268] [jointLog] [info] Number of fragments entirely discarded because of alignment score : 4,688,270
+[2023-06-09 10:08:57.268] [jointLog] [info] Number of fragments discarded because they are best-mapped to decoys : 0
+[2023-06-09 10:08:57.268] [jointLog] [info] Number of fragments discarded because they have only dovetail (discordant) mappings to valid targets : 138,069
+[2023-06-09 10:08:57.268] [jointLog] [info] Mapping rate = 61.1166%
+
+[2023-06-09 10:08:57.268] [jointLog] [info] finished quantifyLibrary()
+[2023-06-09 10:08:57.272] [jointLog] [info] Starting optimizer
+[2023-06-09 10:08:57.329] [jointLog] [info] Marked 0 weighted equivalence classes as degenerate
+[2023-06-09 10:08:57.337] [jointLog] [info] iteration = 0 | max rel diff. = 7617.92
+[2023-06-09 10:08:57.420] [jointLog] [info] iteration 11, adjusting effective lengths to account for biases
+[2023-06-09 10:09:03.848] [jointLog] [info] Computed expected counts (for bias correction)
+[2023-06-09 10:09:03.848] [jointLog] [info] processed bias for 0.0% of the transcripts
+[2023-06-09 10:09:04.204] [jointLog] [info] processed bias for 10.0% of the transcripts
+[2023-06-09 10:09:04.554] [jointLog] [info] processed bias for 20.0% of the transcripts
+[2023-06-09 10:09:04.902] [jointLog] [info] processed bias for 30.0% of the transcripts
+[2023-06-09 10:09:05.250] [jointLog] [info] processed bias for 40.0% of the transcripts
+[2023-06-09 10:09:05.612] [jointLog] [info] processed bias for 50.0% of the transcripts
+[2023-06-09 10:09:05.972] [jointLog] [info] processed bias for 60.0% of the transcripts
+[2023-06-09 10:09:06.331] [jointLog] [info] processed bias for 70.0% of the transcripts
+[2023-06-09 10:09:06.680] [jointLog] [info] processed bias for 80.0% of the transcripts
+[2023-06-09 10:09:07.036] [jointLog] [info] processed bias for 90.0% of the transcripts
+[2023-06-09 10:09:07.414] [jointLog] [info] processed bias for 100.0% of the transcripts
+[2023-06-09 10:09:08.176] [jointLog] [info] iteration = 100 | max rel diff. = 0.804609
+[2023-06-09 10:09:08.723] [jointLog] [info] iteration = 166 | max rel diff. = 0.00535042
+[2023-06-09 10:09:08.728] [jointLog] [info] Finished optimizer
+[2023-06-09 10:09:08.728] [jointLog] [info] writing output 
+
+[2023-06-09 10:09:09.008] [jointLog] [info] Starting Bootstrapping
+[2023-06-09 10:09:09.025] [jointLog] [info] Will draw 100 bootstrap samples
+[2023-06-09 10:09:09.025] [jointLog] [info] Optimizing over 172,481 equivalence classes
+[2023-06-09 10:09:09.034] [jointLog] [info] Marked 0 weighted equivalence classes as degenerate
+[2023-06-09 10:09:14.284] [jointLog] [info] wrote 1 bootstraps
+[2023-06-09 10:09:14.339] [jointLog] [info] wrote 2 bootstraps
+[2023-06-09 10:09:14.467] [jointLog] [info] wrote 3 bootstraps
+[2023-06-09 10:09:14.623] [jointLog] [info] wrote 4 bootstraps
+[2023-06-09 10:09:14.777] [jointLog] [info] wrote 5 bootstraps
+[2023-06-09 10:09:14.827] [jointLog] [info] wrote 6 bootstraps
+[2023-06-09 10:09:14.876] [jointLog] [info] wrote 7 bootstraps
+[2023-06-09 10:09:14.926] [jointLog] [info] wrote 8 bootstraps
+[2023-06-09 10:09:14.975] [jointLog] [info] wrote 9 bootstraps
+[2023-06-09 10:09:15.043] [jointLog] [info] wrote 10 bootstraps
+[2023-06-09 10:09:15.236] [jointLog] [info] wrote 11 bootstraps
+[2023-06-09 10:09:15.286] [jointLog] [info] wrote 12 bootstraps
+[2023-06-09 10:09:15.386] [jointLog] [info] wrote 13 bootstraps
+[2023-06-09 10:09:15.435] [jointLog] [info] wrote 14 bootstraps
+[2023-06-09 10:09:15.484] [jointLog] [info] wrote 15 bootstraps
+[2023-06-09 10:09:15.676] [jointLog] [info] wrote 16 bootstraps
+[2023-06-09 10:09:15.901] [jointLog] [info] wrote 17 bootstraps
+[2023-06-09 10:09:16.041] [jointLog] [info] wrote 18 bootstraps
+[2023-06-09 10:09:16.456] [jointLog] [info] wrote 19 bootstraps
+[2023-06-09 10:09:16.587] [jointLog] [info] wrote 20 bootstraps
+[2023-06-09 10:09:16.963] [jointLog] [info] wrote 21 bootstraps
+[2023-06-09 10:09:17.012] [jointLog] [info] wrote 22 bootstraps
+[2023-06-09 10:09:17.121] [jointLog] [info] wrote 23 bootstraps
+[2023-06-09 10:09:17.184] [jointLog] [info] wrote 24 bootstraps
+[2023-06-09 10:09:17.237] [jointLog] [info] wrote 25 bootstraps
+[2023-06-09 10:09:17.493] [jointLog] [info] wrote 26 bootstraps
+[2023-06-09 10:09:17.542] [jointLog] [info] wrote 27 bootstraps
+[2023-06-09 10:09:17.688] [jointLog] [info] wrote 28 bootstraps
+[2023-06-09 10:09:17.789] [jointLog] [info] wrote 29 bootstraps
+[2023-06-09 10:09:17.978] [jointLog] [info] wrote 30 bootstraps
+[2023-06-09 10:09:18.045] [jointLog] [info] wrote 31 bootstraps
+[2023-06-09 10:09:19.825] [jointLog] [info] wrote 32 bootstraps
+[2023-06-09 10:09:20.379] [jointLog] [info] wrote 33 bootstraps
+[2023-06-09 10:09:20.654] [jointLog] [info] wrote 34 bootstraps
+[2023-06-09 10:09:20.746] [jointLog] [info] wrote 35 bootstraps
+[2023-06-09 10:09:20.831] [jointLog] [info] wrote 36 bootstraps
+[2023-06-09 10:09:20.880] [jointLog] [info] wrote 37 bootstraps
+[2023-06-09 10:09:21.336] [jointLog] [info] wrote 38 bootstraps
+[2023-06-09 10:09:21.504] [jointLog] [info] wrote 39 bootstraps
+[2023-06-09 10:09:21.783] [jointLog] [info] wrote 40 bootstraps
+[2023-06-09 10:09:22.004] [jointLog] [info] wrote 41 bootstraps
+[2023-06-09 10:09:22.091] [jointLog] [info] wrote 42 bootstraps
+[2023-06-09 10:09:22.151] [jointLog] [info] wrote 43 bootstraps
+[2023-06-09 10:09:22.326] [jointLog] [info] wrote 44 bootstraps
+[2023-06-09 10:09:22.375] [jointLog] [info] wrote 45 bootstraps
+[2023-06-09 10:09:22.488] [jointLog] [info] wrote 46 bootstraps
+[2023-06-09 10:09:22.614] [jointLog] [info] wrote 47 bootstraps
+[2023-06-09 10:09:22.807] [jointLog] [info] wrote 48 bootstraps
+[2023-06-09 10:09:22.937] [jointLog] [info] wrote 49 bootstraps
+[2023-06-09 10:09:22.997] [jointLog] [info] wrote 50 bootstraps
+[2023-06-09 10:09:23.067] [jointLog] [info] wrote 51 bootstraps
+[2023-06-09 10:09:23.116] [jointLog] [info] wrote 52 bootstraps
+[2023-06-09 10:09:23.458] [jointLog] [info] wrote 53 bootstraps
+[2023-06-09 10:09:23.785] [jointLog] [info] wrote 54 bootstraps
+[2023-06-09 10:09:24.050] [jointLog] [info] wrote 55 bootstraps
+[2023-06-09 10:09:24.808] [jointLog] [info] wrote 56 bootstraps
+[2023-06-09 10:09:25.406] [jointLog] [info] wrote 57 bootstraps
+[2023-06-09 10:09:25.510] [jointLog] [info] wrote 58 bootstraps
+[2023-06-09 10:09:25.688] [jointLog] [info] wrote 59 bootstraps
+[2023-06-09 10:09:25.792] [jointLog] [info] wrote 60 bootstraps
+[2023-06-09 10:09:25.842] [jointLog] [info] wrote 61 bootstraps
+[2023-06-09 10:09:25.992] [jointLog] [info] wrote 62 bootstraps
+[2023-06-09 10:09:26.298] [jointLog] [info] wrote 63 bootstraps
+[2023-06-09 10:09:26.436] [jointLog] [info] wrote 64 bootstraps
+[2023-06-09 10:09:26.511] [jointLog] [info] wrote 65 bootstraps
+[2023-06-09 10:09:26.895] [jointLog] [info] wrote 66 bootstraps
+[2023-06-09 10:09:27.687] [jointLog] [info] wrote 67 bootstraps
+[2023-06-09 10:09:27.853] [jointLog] [info] wrote 68 bootstraps
+[2023-06-09 10:09:28.013] [jointLog] [info] wrote 69 bootstraps
+[2023-06-09 10:09:28.063] [jointLog] [info] wrote 70 bootstraps
+[2023-06-09 10:09:28.246] [jointLog] [info] wrote 71 bootstraps
+[2023-06-09 10:09:28.619] [jointLog] [info] wrote 72 bootstraps
+[2023-06-09 10:09:28.677] [jointLog] [info] wrote 73 bootstraps
+[2023-06-09 10:09:28.870] [jointLog] [info] wrote 74 bootstraps
+[2023-06-09 10:09:29.082] [jointLog] [info] wrote 75 bootstraps
+[2023-06-09 10:09:29.132] [jointLog] [info] wrote 76 bootstraps
+[2023-06-09 10:09:29.181] [jointLog] [info] wrote 77 bootstraps
+[2023-06-09 10:09:29.230] [jointLog] [info] wrote 78 bootstraps
+[2023-06-09 10:09:29.377] [jointLog] [info] wrote 79 bootstraps
+[2023-06-09 10:09:29.481] [jointLog] [info] wrote 80 bootstraps
+[2023-06-09 10:09:29.542] [jointLog] [info] wrote 81 bootstraps
+[2023-06-09 10:09:29.936] [jointLog] [info] wrote 82 bootstraps
+[2023-06-09 10:09:30.701] [jointLog] [info] wrote 83 bootstraps
+[2023-06-09 10:09:30.825] [jointLog] [info] wrote 84 bootstraps
+[2023-06-09 10:09:31.047] [jointLog] [info] wrote 85 bootstraps
+[2023-06-09 10:09:31.096] [jointLog] [info] wrote 86 bootstraps
+[2023-06-09 10:09:31.312] [jointLog] [info] wrote 87 bootstraps
+[2023-06-09 10:09:31.394] [jointLog] [info] wrote 88 bootstraps
+[2023-06-09 10:09:31.496] [jointLog] [info] wrote 89 bootstraps
+[2023-06-09 10:09:31.717] [jointLog] [info] wrote 90 bootstraps
+[2023-06-09 10:09:31.766] [jointLog] [info] wrote 91 bootstraps
+[2023-06-09 10:09:31.887] [jointLog] [info] wrote 92 bootstraps
+[2023-06-09 10:09:32.434] [jointLog] [info] wrote 93 bootstraps
+[2023-06-09 10:09:32.853] [jointLog] [info] wrote 94 bootstraps
+[2023-06-09 10:09:33.712] [jointLog] [info] wrote 95 bootstraps
+[2023-06-09 10:09:33.877] [jointLog] [info] wrote 96 bootstraps
+[2023-06-09 10:09:34.475] [jointLog] [info] wrote 97 bootstraps
+[2023-06-09 10:09:34.524] [jointLog] [info] wrote 98 bootstraps
+[2023-06-09 10:09:35.495] [jointLog] [info] wrote 99 bootstraps
+[2023-06-09 10:09:35.777] [jointLog] [info] wrote 100 bootstraps
+[2023-06-09 10:09:35.790] [jointLog] [info] Finished Bootstrapping
+[2023-06-09 10:09:35.790] [jointLog] [info] Computing gene-level abundance estimates
+[2023-06-09 10:09:45.171] [jointLog] [info] There were 120769 transcripts mapping to 120769 genes
+[2023-06-09 10:09:45.171] [jointLog] [info] NOTE: We recommend using tximport (https://bioconductor.org/packages/release/bioc/html/tximport.html) for aggregating transcript-level salmon abundance estimates to the gene level.  It is more versatile, exposes more features, and allows considering multi-sample information during aggregation.
+[2023-06-09 10:09:45.448] [jointLog] [info] Aggregating expressions to gene level
+[2023-06-09 10:09:45.865] [jointLog] [info] done

@@ -1,0 +1,2 @@
+./SRR22937051_sfs/quant.sf,yzy02_1
+./SRR22937052_sfs/quant.sf,yzy01_3

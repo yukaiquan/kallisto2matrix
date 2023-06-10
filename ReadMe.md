@@ -6,7 +6,7 @@
 
 ### 1. Introduction
 
-This is a simple script to convert kallisto output to matrix file. The input file is a list of kallisto output directory. The output file is a matrix file. The matrix file is a tab-delimited file. The first column is gene id, the first row is sample name, and the other cells are TPM values.
+This is a simple script to convert kallisto/salmon output to matrix file. The input file is a list of kallisto/salmon output directory. The output file is a matrix file. The matrix file is a tab-delimited file. The first column is gene id, the first row is sample name, and the other cells are TPM values.
 
 ### 2. Usage
 
@@ -21,7 +21,7 @@ samples.txt is a list of kallisto output directory. The format is as follows:
 ./example/BB313-01T0002_sfs/abundance.tsv,01T0002_sfs
 ```
 
-The first column is kallisto output file, the second column is sample name. The output file is test_tpm.matrix and test_count.matrix.txt.
+The first column is kallisto/salmon output file, the second column is sample name. The output file is test_tpm.matrix and test_count.matrix.txt.
 
 test_tpm.matrix.txt:
 
@@ -51,5 +51,8 @@ write tpm matrix file: test_tpm_matrix.txt
 write tpm matrix file: test_tpm_matrix.txt done!
 Done!Goodbye!
 Total elapsed time: 582.4223ms
+
+# convert salmon output to matrix
+..\kallisto2matrix.exe -i .\samples_salmon.txt -o salmon -t salmon
 
 ```
