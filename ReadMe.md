@@ -10,13 +10,12 @@ This is a simple script to convert kallisto/salmon output to matrix file. The in
 
 ### 2. Installation
 
+```bash
+
 cargo build --release
+```
 
 you can find the executable file in target/release/kallisto2matrix or target/release/kallisto2matrix.exe
-
-````bash
-
-```bash
 
 ### 2. Usage
 
@@ -71,4 +70,4 @@ Total elapsed time: 582.4223ms
 # convert salmon output to matrix
 ..\kallisto2matrix.exe -i .\samples_salmon.txt -o salmon -t salmon
 
-````
+```
