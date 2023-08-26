@@ -1,5 +1,9 @@
 ## Kallisto to matrix
 
+<img data-toggle="modal" data-target="[data-modal='10.5281/zenodo.8285146']" src="https://zenodo.org/badge/DOI/10.5281/zenodo.8285146.svg" alt="10.5281/zenodo.8285146">
+
+Kaiquan Yu. (2023). Kallisto2matrix: a simple script to convert kallisto/salmon output to matrix files (0.0.1). Zenodo. https://doi.org/10.5281/zenodo.8285146
+
 🙈: yukaiquan
 <br/>
 📧: 1962568272@qq.com
