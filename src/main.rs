@@ -1,9 +1,12 @@
 use ansi_term::Colour;
 use csv::ReaderBuilder;
 use std::collections::HashMap;
+//引入Arc
+use std::sync::Arc;
 
 mod arg;
 use arg::get_arg;
+use std::thread;
 
 fn main() {
     let start_time = std::time::Instant::now();
@@ -12,15 +15,50 @@ fn main() {
     let input = matches.value_of("input").unwrap();
     let output = matches.value_of("output").unwrap();
     let input_type = matches.value_of("type").unwrap_or("kallisto");
-
+    // input_type 只可以有二种状态kallisto salmon
+    if input_type != "kallisto" && input_type != "salmon" {
+        panic!("input_type can only be kallisto or salmon");
+    }
     let (sample_names, count_matrix_hash, tpm_matrix_hash, fpkm_matrix_hash) =
         read_file_2_vec(input, input_type);
-    // 写出count matrix
-    write_matrix(&output, count_matrix_hash, "count", sample_names.clone());
-    // 写出tpm matrix
-    write_matrix(&output, tpm_matrix_hash, "tpm", sample_names.clone());
-    // 写出fpkm matrix
-    write_matrix(&output, fpkm_matrix_hash, "fpkm", sample_names.clone());
+    // // 写出count matrix
+    // write_matrix(&output, count_matrix_hash, "count", &sample_names);
+    // // 写出tpm matrix
+    // write_matrix(&output, tpm_matrix_hash, "tpm", &sample_names);
+    // // 写出fpkm matrix
+    // write_matrix(&output, fpkm_matrix_hash, "fpkm", &sample_names);
+    // convert threads 20231007
+    let output_arc = Arc::new(output.to_string());
+    let output_arc_1 = output_arc.clone();
+    let output_arc_2 = output_arc.clone();
+    let output_arc_3 = output_arc.clone();
+    let sample_names_arc = Arc::new(sample_names);
+    let sample_names_arc_1 = sample_names_arc.clone();
+    let sample_names_arc_2 = sample_names_arc.clone();
+    let sample_names_arc_3 = sample_names_arc.clone();
+    let handle_write_count_matrix = thread::spawn(move || {
+        write_matrix(
+            &output_arc_1,
+            count_matrix_hash,
+            "count",
+            &sample_names_arc_1,
+        )
+    });
+    let handle_write_tpm_matrix = thread::spawn(move || {
+        write_matrix(
+            &output_arc_2.clone(),
+            tpm_matrix_hash,
+            "tpm",
+            &sample_names_arc_2,
+        )
+    });
+    let handle_write_fpkm_matrix = thread::spawn(move || {
+        write_matrix(&output_arc_3, fpkm_matrix_hash, "fpkm", &sample_names_arc_3)
+    });
+
+    handle_write_count_matrix.join().unwrap();
+    handle_write_tpm_matrix.join().unwrap();
+    handle_write_fpkm_matrix.join().unwrap();
     println!(
         "{}{}",
         Colour::Green.paint("Done!"),
@@ -139,7 +177,7 @@ fn write_matrix(
     name: &str,
     out_hash: HashMap<String, Vec<f64>>,
     prefix: &str,
-    sample_names: Vec<String>,
+    sample_names: &Vec<String>,
 ) {
     println!(
         "write {} matrix file: {}",

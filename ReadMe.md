@@ -84,3 +84,43 @@ Total elapsed time: 582.4223ms
 ..\kallisto2matrix -i .\samples_salmon.txt -o salmon -t salmon
 
 ```
+
+### 5. threads
+
+I want to use 4 threads to run kallisto2matrix.
+
+#### 5.1 threads
+
+```bash
+../kallisto2matrix.exe -i ./samples_salmon.txt -o salmon -t salmon
+Welcome to use kallisto2matrix! Author: Yu kaiquan <1962568272@qq.com>
+read salmon output file: ./SRR22937051_sfs/quant.sf
+read salmon output file: ./SRR22937052_sfs/quant.sf
+write count matrix file: salmon_count_matrix.txt
+write count matrix file: salmon_count_matrix.txt done!
+write tpm matrix file: salmon_tpm_matrix.txt
+write tpm matrix file: salmon_tpm_matrix.txt done!
+write fpkm matrix file: salmon_fpkm_matrix.txt
+write fpkm matrix file: salmon_fpkm_matrix.txt done!
+Done!Goodbye!
+Total elapsed time: 1.0790253s
+```
+
+#### 5.2 4 threads
+
+```bash
+../kallisto2matrix.exe -i ./samples_salmon.txt -o salmon -t salmon
+Welcome to use kallisto2matrix! Author: Yu kaiquan <1962568272@qq.com>
+read salmon output file: ./SRR22937051_sfs/quant.sf
+read salmon output file: ./SRR22937052_sfs/quant.sf
+write count matrix file: salmon_count_matrix.txt
+write tpm matrix file: salmon_tpm_matrix.txt
+write fpkm matrix file: salmon_fpkm_matrix.txt
+write count matrix file: salmon_count_matrix.txt done!
+write tpm matrix file: salmon_tpm_matrix.txt done!
+write fpkm matrix file: salmon_fpkm_matrix.txt done!
+Done!Goodbye!
+Total elapsed time: 805.5274ms
+```
+
+It is much faster than 1 thread.(800ms vs 1s)
