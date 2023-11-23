@@ -15,8 +15,10 @@ This is a simple script to convert kallisto/salmon output to matrix file. The in
 ### 2. Installation (no requirement)
 
 ```bash
-
+# windowse
 cargo build --release
+# linux
+cargo.exe build --release --target=x86_64-unknown-linux-musl
 ```
 
 you can find the executable file in target/release/kallisto2matrix or target/release/kallisto2matrix.exe

@@ -38,5 +38,14 @@ pub fn get_arg() -> ArgMatches {
                 .takes_value(true)
                 .required(false),
         )
+        .arg(
+            Arg::with_name("threads")
+                .short('n')
+                .long("threads")
+                .value_name("STRING")
+                .help("threads (default: 1)")
+                .takes_value(true)
+                .required(false),
+        )
         .get_matches()
 }

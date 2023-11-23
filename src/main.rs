@@ -14,6 +14,7 @@ fn main() {
 
     let input = matches.value_of("input").unwrap();
     let output = matches.value_of("output").unwrap();
+    let threads = matches.value_of("threads").unwrap_or("1");
     let input_type = matches.value_of("type").unwrap_or("kallisto");
     // input_type 只可以有二种状态kallisto salmon
     if input_type != "kallisto" && input_type != "salmon" {
@@ -21,44 +22,49 @@ fn main() {
     }
     let (sample_names, count_matrix_hash, tpm_matrix_hash, fpkm_matrix_hash) =
         read_file_2_vec(input, input_type);
-    // // 写出count matrix
-    // write_matrix(&output, count_matrix_hash, "count", &sample_names);
-    // // 写出tpm matrix
-    // write_matrix(&output, tpm_matrix_hash, "tpm", &sample_names);
-    // // 写出fpkm matrix
-    // write_matrix(&output, fpkm_matrix_hash, "fpkm", &sample_names);
-    // convert threads 20231007
-    let output_arc = Arc::new(output.to_string());
-    let output_arc_1 = output_arc.clone();
-    let output_arc_2 = output_arc.clone();
-    let output_arc_3 = output_arc.clone();
-    let sample_names_arc = Arc::new(sample_names);
-    let sample_names_arc_1 = sample_names_arc.clone();
-    let sample_names_arc_2 = sample_names_arc.clone();
-    let sample_names_arc_3 = sample_names_arc.clone();
-    let handle_write_count_matrix = thread::spawn(move || {
-        write_matrix(
-            &output_arc_1,
-            count_matrix_hash,
-            "count",
-            &sample_names_arc_1,
-        )
-    });
-    let handle_write_tpm_matrix = thread::spawn(move || {
-        write_matrix(
-            &output_arc_2.clone(),
-            tpm_matrix_hash,
-            "tpm",
-            &sample_names_arc_2,
-        )
-    });
-    let handle_write_fpkm_matrix = thread::spawn(move || {
-        write_matrix(&output_arc_3, fpkm_matrix_hash, "fpkm", &sample_names_arc_3)
-    });
+    if threads == "1" {
+        // 写出count matrix
+        write_matrix(&output, count_matrix_hash, "count", &sample_names);
+        // 写出tpm matrix
+        write_matrix(&output, tpm_matrix_hash, "tpm", &sample_names);
+        // 写出fpkm matrix
+        write_matrix(&output, fpkm_matrix_hash, "fpkm", &sample_names);
+    } else {
+        // convert threads 20231007
+        let output_arc = Arc::new(output.to_string());
+        let output_arc_1 = output_arc.clone();
+        let output_arc_2 = output_arc.clone();
+        let output_arc_3 = output_arc.clone();
+        let sample_names_arc = Arc::new(sample_names);
+        let sample_names_arc_1 = sample_names_arc.clone();
+        let sample_names_arc_2 = sample_names_arc.clone();
+        let sample_names_arc_3 = sample_names_arc.clone();
 
-    handle_write_count_matrix.join().unwrap();
-    handle_write_tpm_matrix.join().unwrap();
-    handle_write_fpkm_matrix.join().unwrap();
+        let handle_write_count_matrix = thread::spawn(move || {
+            write_matrix(
+                &output_arc_1,
+                count_matrix_hash,
+                "count",
+                &sample_names_arc_1,
+            )
+        });
+        let handle_write_tpm_matrix = thread::spawn(move || {
+            write_matrix(
+                &output_arc_2.clone(),
+                tpm_matrix_hash,
+                "tpm",
+                &sample_names_arc_2,
+            )
+        });
+        let handle_write_fpkm_matrix = thread::spawn(move || {
+            write_matrix(&output_arc_3, fpkm_matrix_hash, "fpkm", &sample_names_arc_3)
+        });
+
+        handle_write_count_matrix.join().unwrap();
+        handle_write_tpm_matrix.join().unwrap();
+        handle_write_fpkm_matrix.join().unwrap();
+    }
+
     println!(
         "{}{}",
         Colour::Green.paint("Done!"),

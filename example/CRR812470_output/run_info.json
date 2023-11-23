@@ -1,0 +1,13 @@
+{
+	"n_targets": 63658,
+	"n_bootstraps": 0,
+	"n_processed": 23033371,
+	"n_pseudoaligned": 9017060,
+	"n_unique": 8746812,
+	"p_pseudoaligned": 39.1,
+	"p_unique": 38.0,
+	"kallisto_version": "0.46.1",
+	"index_version": 10,
+	"start_time": "Mon Nov 20 15:38:18 2023",
+	"call": "kallisto quant -i /filer-5/user/tan/indexDir/190823_Barley_Morex_V2_gene_annotation_PGSB.all.cds.annotations.idx -o /filer-5/user/tan/barley_expression_database_rawdata/01fp/kallisto/CRR812470_output --paired -t 8 /filer-5/user/tan/barley_expression_database_rawdata/01fp/kallisto/CRR812470_clean_f1.fq.gz /filer-5/user/tan/barley_expression_database_rawdata/01fp/kallisto/CRR812470_clean_r2.fq.gz"
+}
