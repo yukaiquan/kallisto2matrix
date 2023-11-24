@@ -119,6 +119,12 @@ fn read_kallisto(input: &str) -> HashMap<String, Vec<f64>> {
         let record = result.unwrap();
         let gene_id = record.get(0).unwrap().to_string();
         let eff_counts = record.get(3).unwrap().parse::<f64>().unwrap();
+        if eff_counts == 0.0 {
+            let mut vec = map.get(&gene_id).unwrap().clone();
+            vec.push(0.0);
+            map.insert(gene_id, vec);
+            continue;
+        }
         let count = eff_counts
             / (record.get(1).unwrap().parse::<f64>().unwrap()
                 / record.get(2).unwrap().parse::<f64>().unwrap());
@@ -170,6 +176,12 @@ fn read_salmon(input: &str) -> HashMap<String, Vec<f64>> {
         let record = result.unwrap();
         let gene_id = record.get(0).unwrap().to_string();
         let counts = record.get(4).unwrap().parse::<f64>().unwrap();
+        if counts == 0.0 {
+            let mut vec = map.get(&gene_id).unwrap().clone();
+            vec.push(0.0);
+            map.insert(gene_id, vec);
+            continue;
+        }
         let length = record.get(1).unwrap().parse::<f64>().unwrap();
         let fpkm = 1000000000.0 * counts / (total_reads * length);
         let mut vec = map.get(&gene_id).unwrap().clone();
@@ -216,7 +228,7 @@ fn write_matrix(
     for sample_name in sample_names.iter() {
         header.push(sample_name);
     }
-    wtr.write_record(header).unwrap();
+    wtr.write_record(&header).unwrap();
     // 对hashmap进行排序
     let mut out_hash: Vec<_> = out_hash.into_iter().collect();
     out_hash.sort_by(|a, b| a.0.cmp(&b.0));
@@ -225,7 +237,18 @@ fn write_matrix(
         let mut line = Vec::new();
         line.push(gene_id.clone());
         counts.iter().for_each(|count| line.push(count.to_string()));
-        wtr.write_record(line).unwrap();
+        // wtr.write_record(line).unwrap();
+        // 报错打印这一行
+        // wtr.write_record(&line).unwrap();
+        // 报错则打印这一行跳过
+        // wtr.write_record(&line)
+        //     .unwrap_or_else(|_| println!("error: {}", gene_id))
+        if &line.len() != &header.len() {
+            println!("error: {}", gene_id);
+            continue;
+        } else {
+            wtr.write_record(&line).unwrap();
+        }
     }
     wtr.flush().unwrap();
 
