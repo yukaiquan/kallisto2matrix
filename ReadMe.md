@@ -127,7 +127,7 @@ Total elapsed time: 805.5274ms
 
 It is much faster than 1 thread.(800ms vs 1s)
 
-#### 5.3 Future Plans
+### 6. Future Plans
 
 - **Parallel Acceleration**
 - **Asynchronous Reading and Writing**
