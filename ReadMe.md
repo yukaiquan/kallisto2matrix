@@ -12,7 +12,7 @@ Kaiquan Yu. (2023). Kallisto2matrix: a simple script to convert kallisto/salmon 
 
 This is a simple script to convert kallisto/salmon output to matrix file. The input file is a list of kallisto/salmon output directory. The output file is a matrix file. The matrix file is a tab-delimited file. The first column is gene id, the first row is sample name, and the other cells are TPM values.
 
-### 2. Installation (no requirement)
+~~### 2. Installation (no requirement)~~
 
 ```bash
 # windowse or linux
@@ -21,9 +21,9 @@ cargo build --release
 cargo build --release --target=x86_64-unknown-linux-musl
 ```
 
-you can find the executable file in target/release/kallisto2matrix or target/release/kallisto2matrix.exe
-
 ### 3. Usage
+
+**You can find the executable file in _target/release/kallisto2matrix_ or _target/release/kallisto2matrix.exe_**
 
 **Now, you can use the executable file to convert kallisto/salmon output to matrix file.**
 
