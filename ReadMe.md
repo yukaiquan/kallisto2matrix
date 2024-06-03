@@ -14,16 +14,21 @@ This is a simple script to convert kallisto/salmon output to matrix file. The in
 
 ~~### 2. Installation (no requirement)~~
 
-```bash
-# windowse or linux
-cargo build --release
-# Win10 cross-compile to linux application
-cargo build --release --target=x86_64-unknown-linux-musl
-```
-
 ### 3. Usage
 
 **You can find the executable file in _target/release/kallisto2matrix_ or _target/release/kallisto2matrix.exe_**
+
+**Dowload Link**：https://github.com/yukaiquan/kallisto2matrix/releases
+
+**or:**
+
+```she
+# linux example
+wget https://github.com/yukaiquan/kallisto2matrix/releases/download/v1.0.3/kallisto2matrix
+# install linux
+echo export PATH=$(pwd):\$PATH >> ~/.bashrc
+source ~/.bashrc
+```
 
 **Now, you can use the executable file to convert kallisto/salmon output to matrix file.**
 

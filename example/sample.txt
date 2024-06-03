@@ -1,2 +1,2 @@
-/mnt/e/Rust/kallisto2matrix/kallisto2matrix/release/example/CRR812470_output/abundance.tsv,CRR812470_output
-/mnt/e/Rust/kallisto2matrix/kallisto2matrix/release/example/CRR812471_output/abundance.tsv,CRR812471_output
+./CRR812470_output/abundance.tsv,CRR812470
+./CRR812471_output/abundance.tsv,CRR812471
