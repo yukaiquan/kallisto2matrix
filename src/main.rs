@@ -2,6 +2,7 @@ use ansi_term::Colour;
 use csv::ReaderBuilder;
 use std::collections::HashMap;
 //引入Arc
+use std::process;
 use std::sync::Arc;
 
 mod arg;
@@ -10,18 +11,33 @@ use std::thread;
 
 fn main() {
     let start_time = std::time::Instant::now();
+
     let matches = get_arg();
 
-    let input = matches.value_of("input").unwrap();
-    let output = matches.value_of("output").unwrap();
-    let threads = matches.value_of("threads").unwrap_or("1");
-    let input_type = matches.value_of("type").unwrap_or("kallisto");
-    // input_type 只可以有二种状态kallisto salmon
+    // 读取参数
+    let input = matches.get_one::<String>("input").unwrap();
+    let output = matches.get_one::<String>("output").unwrap();
+    let threads = matches.get_one::<String>("threads").unwrap();
+    let input_type = matches.get_one::<String>("type").unwrap();
+
+    // 校验input_type（仅kallisto/salmon）
     if input_type != "kallisto" && input_type != "salmon" {
-        panic!("input_type can only be kallisto or salmon");
+        eprintln!(
+            "{}",
+            Colour::Red.paint("Error: input_type can only be 'kallisto' or 'salmon'!")
+        );
+        process::exit(1); // 优雅退出，替代panic
     }
-    let (sample_names, count_matrix_hash, tpm_matrix_hash, fpkm_matrix_hash) =
-        read_file_2_vec(input, input_type);
+
+    // 新增接收est_counts_matrix_hash
+    let (
+        sample_names,
+        count_matrix_hash,
+        tpm_matrix_hash,
+        fpkm_matrix_hash,
+        est_counts_matrix_hash,
+    ) = read_file_2_vec(input, input_type);
+
     if threads == "1" {
         // 写出count matrix
         write_matrix(&output, count_matrix_hash, "count", &sample_names);
@@ -29,16 +45,20 @@ fn main() {
         write_matrix(&output, tpm_matrix_hash, "tpm", &sample_names);
         // 写出fpkm matrix
         write_matrix(&output, fpkm_matrix_hash, "fpkm", &sample_names);
+        // 新增：写出est_counts matrix
+        write_matrix(&output, est_counts_matrix_hash, "est_counts", &sample_names);
     } else {
         // convert threads 20231007
         let output_arc = Arc::new(output.to_string());
         let output_arc_1 = output_arc.clone();
         let output_arc_2 = output_arc.clone();
         let output_arc_3 = output_arc.clone();
+        let output_arc_4 = output_arc.clone(); // 新增：est_counts的output克隆
         let sample_names_arc = Arc::new(sample_names);
         let sample_names_arc_1 = sample_names_arc.clone();
         let sample_names_arc_2 = sample_names_arc.clone();
         let sample_names_arc_3 = sample_names_arc.clone();
+        let sample_names_arc_4 = sample_names_arc.clone(); // 新增：est_counts的sample name克隆
 
         let handle_write_count_matrix = thread::spawn(move || {
             write_matrix(
@@ -59,10 +79,20 @@ fn main() {
         let handle_write_fpkm_matrix = thread::spawn(move || {
             write_matrix(&output_arc_3, fpkm_matrix_hash, "fpkm", &sample_names_arc_3)
         });
+        // 新增：est_counts矩阵的写入线程
+        let handle_write_est_counts_matrix = thread::spawn(move || {
+            write_matrix(
+                &output_arc_4,
+                est_counts_matrix_hash,
+                "est_counts",
+                &sample_names_arc_4,
+            )
+        });
 
         handle_write_count_matrix.join().unwrap();
         handle_write_tpm_matrix.join().unwrap();
         handle_write_fpkm_matrix.join().unwrap();
+        handle_write_est_counts_matrix.join().unwrap(); // 新增：等待est_counts线程完成
     }
 
     println!(
@@ -90,17 +120,18 @@ fn read_kallisto(input: &str) -> HashMap<String, Vec<f64>> {
         let record = result.unwrap();
         let gene_id = record.get(0).unwrap().to_string();
         let tpm = record.get(4).unwrap().parse::<f64>().unwrap();
-        let eff_counts = record.get(3).unwrap().parse::<f64>().unwrap();
-        // eff_counts = count * (length / eff_length)
-        // 根据公式计算count
-        // count = eff_counts / (length / eff_length)
+        let eff_counts = record.get(3).unwrap().parse::<f64>().unwrap(); // est_counts即eff_counts
+                                                                         // eff_counts = count * (length / eff_length)
+                                                                         // 根据公式计算count
+                                                                         // count = eff_counts / (length / eff_length)
         let count = eff_counts
             / (record.get(1).unwrap().parse::<f64>().unwrap()
                 / record.get(2).unwrap().parse::<f64>().unwrap());
         total_reads += count;
         let mut vec = Vec::new();
-        vec.push(tpm);
-        vec.push(count);
+        vec.push(tpm); // 索引0: tpm
+        vec.push(count); // 索引1: count
+        vec.push(eff_counts); // 索引2: est_counts (新增)
         map.insert(gene_id, vec);
     }
     // 根据公式计算fpkm
@@ -121,7 +152,7 @@ fn read_kallisto(input: &str) -> HashMap<String, Vec<f64>> {
         let eff_counts = record.get(3).unwrap().parse::<f64>().unwrap();
         if eff_counts == 0.0 {
             let mut vec = map.get(&gene_id).unwrap().clone();
-            vec.push(0.0);
+            vec.push(0.0); // 索引3: fpkm (0值)
             map.insert(gene_id, vec);
             continue;
         }
@@ -131,7 +162,7 @@ fn read_kallisto(input: &str) -> HashMap<String, Vec<f64>> {
         let length = record.get(1).unwrap().parse::<f64>().unwrap();
         let fpkm = 1000000000.0 * count / (total_reads * length);
         let mut vec = map.get(&gene_id).unwrap().clone();
-        vec.push(fpkm);
+        vec.push(fpkm); // 索引3: fpkm
         map.insert(gene_id, vec);
     }
     map
@@ -156,8 +187,9 @@ fn read_salmon(input: &str) -> HashMap<String, Vec<f64>> {
         let counts = record.get(4).unwrap().parse::<f64>().unwrap();
         total_reads += counts;
         let mut vec = Vec::new();
-        vec.push(tpm);
-        vec.push(counts);
+        vec.push(tpm); // 索引0: tpm
+        vec.push(counts); // 索引1: count
+        vec.push(0.0); // 索引2: est_counts (salmon无，填充0，保证格式统一)
         map.insert(gene_id, vec);
     }
     // 根据公式计算fpkm
@@ -178,14 +210,14 @@ fn read_salmon(input: &str) -> HashMap<String, Vec<f64>> {
         let counts = record.get(4).unwrap().parse::<f64>().unwrap();
         if counts == 0.0 {
             let mut vec = map.get(&gene_id).unwrap().clone();
-            vec.push(0.0);
+            vec.push(0.0); // 索引3: fpkm (0值)
             map.insert(gene_id, vec);
             continue;
         }
         let length = record.get(1).unwrap().parse::<f64>().unwrap();
         let fpkm = 1000000000.0 * counts / (total_reads * length);
         let mut vec = map.get(&gene_id).unwrap().clone();
-        vec.push(fpkm);
+        vec.push(fpkm); // 索引3: fpkm
         map.insert(gene_id, vec);
     }
     map
@@ -202,23 +234,7 @@ fn write_matrix(
         Colour::Green.paint(prefix),
         Colour::Green.paint(format!("{}_{}_{}.txt", name, prefix, "matrix"))
     );
-    // 该部分代码在linux中特别慢，原因未知 但是在windows中很快 用File库要比csv库慢很多
-    // let mut file = File::create(format!("{}_{}_{}.txt", name, prefix, "matrix")).unwrap();
-    // let mut header = String::new();
-    // for sample_name in sample_names.iter() {
-    //     header.push_str(&format!("\t{}", sample_name));
-    // }
-    // file.write_all(format!("gene_id{}\n", header).as_bytes())
-    //     .unwrap();
-    // for gene_id in out_hash.keys() {
-    //     let mut line = String::new();
-    //     line.push_str(&format!("{}", gene_id));
-    //     for count in out_hash.get(gene_id).expect("error").iter() {
-    //         line.push_str(&format!("\t{}", count));
-    //     }
-    //     file.write_all(format!("{}\n", line).as_bytes()).unwrap();
-    // }
-    // 优化上面的代码使用csv库
+    // 优化使用csv库写入
     let mut wtr = csv::WriterBuilder::new()
         .delimiter(b'\t')
         .from_path(format!("{}_{}_{}.txt", name, prefix, "matrix"))
@@ -237,14 +253,14 @@ fn write_matrix(
         let mut line = Vec::new();
         line.push(gene_id.clone());
         counts.iter().for_each(|count| line.push(count.to_string()));
-        // wtr.write_record(line).unwrap();
-        // 报错打印这一行
-        // wtr.write_record(&line).unwrap();
-        // 报错则打印这一行跳过
-        // wtr.write_record(&line)
-        //     .unwrap_or_else(|_| println!("error: {}", gene_id))
+        // 检查行列数匹配，避免错误
         if &line.len() != &header.len() {
-            println!("error: {}", gene_id);
+            println!(
+                "警告: 基因{}的数值列数({})与样本数({})不匹配，跳过该基因",
+                gene_id,
+                counts.len(),
+                sample_names.len()
+            );
             continue;
         } else {
             wtr.write_record(&line).unwrap();
@@ -259,7 +275,7 @@ fn write_matrix(
     );
 }
 
-// 返回多个结果 使用元组
+// 返回多个结果 使用元组（新增est_counts_matrix_hash）
 fn read_file_2_vec(
     input: &str,
     input_type: &str,
@@ -268,6 +284,7 @@ fn read_file_2_vec(
     HashMap<String, Vec<f64>>,
     HashMap<String, Vec<f64>>,
     HashMap<String, Vec<f64>>,
+    HashMap<String, Vec<f64>>, // 新增：est_counts矩阵hash
 ) {
     // input: sample csv
     // ./BB313-01T0001_sfs/abundance.tsv,01T0001_sfs
@@ -276,16 +293,16 @@ fn read_file_2_vec(
     let mut count_matrix_hash = HashMap::new();
     let mut tpm_matrix_hash = HashMap::new();
     let mut fpkm_matrix_hash = HashMap::new();
+    let mut est_counts_matrix_hash = HashMap::new(); // 新增：est_counts矩阵hash
 
     let mut samples = ReaderBuilder::new()
         .delimiter(',' as u8)
         .has_headers(false)
         .from_path(input)
         .unwrap();
-    // 读取每个样本的kallisto输出文件
+    // 读取每个样本的kallisto/salmon输出文件
     for sample in samples.records() {
         let record = sample.unwrap();
-        // println!("{:?}", record);
         let sample_name = record.get(1).unwrap().to_string();
         sample_names.push(sample_name);
         let file = record.get(0).unwrap().to_string();
@@ -294,50 +311,29 @@ fn read_file_2_vec(
         } else {
             read_kallisto(&file)
         };
-        // 第一次循环时，将gene_id存入gene_ids
-        // if count_matrix_hash.is_empty() {
-        //     for gene_id in map.keys() {
-        //         count_matrix_hash.insert(
-        //             gene_id.to_string(),
-        //             vec![map.get(gene_id).expect("error")[1]],
-        //         );
-        //     }
-        // } else {
-        //     // 向vec push count
-        //     for gene_id in map.keys() {
-        //         let vec = count_matrix_hash.get_mut(gene_id).expect("error");
-        //         vec.push(map.get(gene_id).expect("error")[1]);
-        //     }
-        // }
-        // if tpm_matrix_hash.is_empty() {
-        //     for gene_id in map.keys() {
-        //         tpm_matrix_hash.insert(
-        //             gene_id.to_string(),
-        //             vec![map.get(gene_id).expect("error")[0]],
-        //         );
-        //     }
-        // } else {
-        //     // 向vec push tpm
-        //     for gene_id in map.keys() {
-        //         let vec = tpm_matrix_hash.get_mut(gene_id).expect("error");
-        //         vec.push(map.get(gene_id).expect("error")[0]);
-        //     }
-        // }
         // 优化代码 2023-05-08
         for gene_id in map.keys() {
-            // count
+            // count (索引1)
             let vec = count_matrix_hash
                 .entry(gene_id.to_string())
                 .or_insert(vec![]);
-            vec.push(map.get(gene_id).expect("error")[1]);
-            // tpm
+            vec.push(map.get(gene_id).expect("读取count失败")[1]);
+
+            // tpm (索引0)
             let vec = tpm_matrix_hash.entry(gene_id.to_string()).or_insert(vec![]);
-            vec.push(map.get(gene_id).expect("error")[0]);
-            // fpkm
+            vec.push(map.get(gene_id).expect("读取tpm失败")[0]);
+
+            // fpkm (索引3)
             let vec = fpkm_matrix_hash
                 .entry(gene_id.to_string())
                 .or_insert(vec![]);
-            vec.push(map.get(gene_id).expect("error")[2]);
+            vec.push(map.get(gene_id).expect("读取fpkm失败")[3]);
+
+            // est_counts (索引2，新增)
+            let vec = est_counts_matrix_hash
+                .entry(gene_id.to_string())
+                .or_insert(vec![]);
+            vec.push(map.get(gene_id).expect("读取est_counts失败")[2]);
         }
     }
     (
@@ -345,5 +341,6 @@ fn read_file_2_vec(
         count_matrix_hash,
         tpm_matrix_hash,
         fpkm_matrix_hash,
+        est_counts_matrix_hash, // 新增返回值
     )
 }
